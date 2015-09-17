@@ -16,7 +16,7 @@ d3.svg.chord = function() {
   // Modefied by Excel Wang to add arrow to chord!
   function chord(d, i) {
     var s = subgroup(this, source, d, i),
-        t = subgroup(this, target, d, i, 0.9);
+        t = subgroup(this, target, d, i, 0.95);
     return "M" + s.p0
       + arc(s.r, s.p1, s.a1 - s.a0) + (equals(s, t)
       ? curve(s.r, s.p1, s.r, s.p0)
@@ -43,7 +43,7 @@ d3.svg.chord = function() {
       a1: a1,
       p0: [r*scale * Math.cos(a0), r*scale * Math.sin(a0)],
       p1: [r*scale * Math.cos(a1), r*scale * Math.sin(a1)],
-      pMid: [r*scale * Math.cos(aMid), r*scale * Math.sin(aMid)]
+      pMid: [r * Math.cos(aMid), r * Math.sin(aMid)]
     };
   }
 
