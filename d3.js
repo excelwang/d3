@@ -8435,20 +8435,27 @@
     area.endAngle = area.y1, delete area.y1;
     return area;
   };
-  d3.svg.chord = function() {
+  d3.svg.chord = function(arrowRatio) {
     var source = d3_source, target = d3_target, radius = d3_svg_chordRadius, startAngle = d3_svg_arcStartAngle, endAngle = d3_svg_arcEndAngle;
-    function chord(d, i) {
-      var s = subgroup(this, source, d, i), t = subgroup(this, target, d, i);
-      return "M" + s.p0 + arc(s.r, s.p1, s.a1 - s.a0) + (equals(s, t) ? curve(s.r, s.p1, s.r, s.p0) : curve(s.r, s.p1, t.r, t.p0) + arc(t.r, t.p1, t.a1 - t.a0) + curve(t.r, t.p1, s.r, s.p0)) + "Z";
+    if (!arrowRatio) {
+      arrowRatio = 0;
     }
-    function subgroup(self, f, d, i) {
-      var subgroup = f.call(self, d, i), r = radius.call(self, subgroup, i), a0 = startAngle.call(self, subgroup, i) - halfπ, a1 = endAngle.call(self, subgroup, i) - halfπ;
+    function chord(d, i) {
+      var s = subgroup(this, source, d, i), t = subgroup(this, target, d, i, 1 - arrowRatio);
+      return "M" + s.p0 + arc(s.r, s.p1, s.a1 - s.a0) + (equals(s, t) ? curve(s.r, s.p1, s.r, s.p0) : curve(s.r, s.p1, t.r, t.p0) + (arrowRatio === 0 ? arc(t.r, t.p1, t.a1 - t.a0) : arrow(t.pMid, t.p1)) + curve(t.r, t.p1, s.r, s.p0)) + "Z";
+    }
+    function subgroup(self, f, d, i, scale) {
+      if (!scale) {
+        scale = 1;
+      }
+      var subgroup = f.call(self, d, i), r = radius.call(self, subgroup, i), a0 = startAngle.call(self, subgroup, i) - halfπ, a1 = endAngle.call(self, subgroup, i) - halfπ, aMid = (a1 - a0) / 2 + a0;
       return {
         r: r,
         a0: a0,
         a1: a1,
-        p0: [ r * Math.cos(a0), r * Math.sin(a0) ],
-        p1: [ r * Math.cos(a1), r * Math.sin(a1) ]
+        p0: [ r * scale * Math.cos(a0), r * scale * Math.sin(a0) ],
+        p1: [ r * scale * Math.cos(a1), r * scale * Math.sin(a1) ],
+        pMid: [ r * Math.cos(aMid), r * Math.sin(aMid) ]
       };
     }
     function equals(a, b) {
@@ -8459,6 +8466,9 @@
     }
     function curve(r0, p0, r1, p1) {
       return "Q 0,0 " + p1;
+    }
+    function arrow(pMid, p1) {
+      return "L" + pMid + "L" + p1;
     }
     chord.radius = function(v) {
       if (!arguments.length) return radius;
