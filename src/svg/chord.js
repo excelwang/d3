@@ -38,7 +38,7 @@ d3.svg.chord = function() {
     var subgroup = f.call(self, d, i),
         r = radius.call(self, subgroup, i),
         a0 = startAngle.call(self, subgroup, i) - halfπ,
-        a1 = endAngle.call(self, subgroup, i) - halfπ;
+        a1 = endAngle.call(self, subgroup, i) - halfπ,
         aMid=(a1-a0)/2+a0;//add by excelwang
     // return {
     //   r: r,
