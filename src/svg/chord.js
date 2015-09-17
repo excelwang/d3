@@ -16,14 +16,7 @@ d3.svg.chord = function() {
   // Modefied by Excel Wang to add arrow to chord!
   function chord(d, i) {
     var s = subgroup(this, source, d, i),
-        t = subgroup(this, target, d, i);
-    // return "M" + s.p0
-    //   + arc(s.r, s.p1, s.a1 - s.a0) + (equals(s, t)
-    //   ? curve(s.r, s.p1, s.r, s.p0)
-    //   : curve(s.r, s.p1, t.r, t.p0)
-    //   + arc(t.r, t.p1, t.a1 - t.a0)
-    //   + curve(t.r, t.p1, s.r, s.p0))
-    //   + "Z";
+        t = subgroup(this, target, d, i, 0.9);
     return "M" + s.p0
       + arc(s.r, s.p1, s.a1 - s.a0) + (equals(s, t)
       ? curve(s.r, s.p1, s.r, s.p0)
@@ -34,26 +27,23 @@ d3.svg.chord = function() {
       + "Z";
   }
 
-  function subgroup(self, f, d, i) {
+  // Modefied by Excel Wang to add arrow to chord!
+  function subgroup(self, f, d, i,scale) {
+    if (!scale){
+      scale=1;
+    }
     var subgroup = f.call(self, d, i),
         r = radius.call(self, subgroup, i),
         a0 = startAngle.call(self, subgroup, i) - halfπ,
         a1 = endAngle.call(self, subgroup, i) - halfπ,
-        aMid=(a1-a0)/2+a0;//add by excelwang
-    // return {
-    //   r: r,
-    //   a0: a0,
-    //   a1: a1,
-    //   p0: [r * Math.cos(a0), r * Math.sin(a0)],
-    //   p1: [r * Math.cos(a1), r * Math.sin(a1)]
-    // };
+        aMid=(a1-a0)/2+a0;
     return {
       r: r,
       a0: a0,
       a1: a1,
-      p0: [r * Math.cos(a0), r * Math.sin(a0)],
-      p1: [r * Math.cos(a1), r * Math.sin(a1)],
-      pMid: [r * Math.cos(aMid), r * Math.sin(aMid)]
+      p0: [r*scale * Math.cos(a0), r*scale * Math.sin(a0)],
+      p1: [r*scale * Math.cos(a1), r*scale * Math.sin(a1)],
+      pMid: [r*scale * Math.cos(aMid), r*scale * Math.sin(aMid)]
     };
   }
 
