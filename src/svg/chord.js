@@ -11,17 +11,18 @@ d3.svg.chord = function() {
       radius = d3_svg_chordRadius,
       startAngle = d3_svg_arcStartAngle,
       endAngle = d3_svg_arcEndAngle,
-      arrowRatio=1;
+      arrowRatio=0;
   // TODO Allow control point to be customized.
   // Modefied by Excel Wang to add arrow to chord!
   function chord(d, i) {
+    alert(arrowRatio);
     var s = subgroup(this, source, d, i),
-        t = subgroup(this, target, d, i, arrowRatio);
+        t = subgroup(this, target, d, i, 1-arrowRatio);
     return "M" + s.p0
       + arc(s.r, s.p1, s.a1 - s.a0) + (equals(s, t)
       ? curve(s.r, s.p1, s.r, s.p0)
       : curve(s.r, s.p1, t.r, t.p0)
-      + (arrowRatio===1?arc(t.r, t.p1, t.a1 - t.a0):arrow(t.pMid,t.p1))
+      + (arrowRatio===0?arc(t.r, t.p1, t.a1 - t.a0):arrow(t.pMid,t.p1))
       + curve(t.r, t.p1, s.r, s.p0))
       + "Z";
   }
