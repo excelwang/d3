@@ -5,17 +5,18 @@ import "../math/trigonometry";
 import "arc";
 import "svg";
 
-d3.svg.chord = function() {
+d3.svg.chord = function(arrowRatio) {
   var source = d3_source,
       target = d3_target,
       radius = d3_svg_chordRadius,
       startAngle = d3_svg_arcStartAngle,
-      endAngle = d3_svg_arcEndAngle,
-      arrowRatio=0;
+      endAngle = d3_svg_arcEndAngle;
+      if(!arrowRatio) {
+        arrowRatio=0;
+      }
   // TODO Allow control point to be customized.
   // Modefied by Excel Wang to add arrow to chord!
   function chord(d, i) {
-    alert(arrowRatio);
     var s = subgroup(this, source, d, i),
         t = subgroup(this, target, d, i, 1-arrowRatio);
     return "M" + s.p0
@@ -66,12 +67,6 @@ d3.svg.chord = function() {
   chord.radius = function(v) {
     if (!arguments.length) return radius;
     radius = d3_functor(v);
-    return chord;
-  };
-
-  chord.arrowRatio = function(v) {
-    if (!arguments.length) return arrowRatio;
-    arrowRatio = d3_functor(v);
     return chord;
   };
 
