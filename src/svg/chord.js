@@ -21,7 +21,7 @@ d3.svg.chord = function() {
       + arc(s.r, s.p1, s.a1 - s.a0) + (equals(s, t)
       ? curve(s.r, s.p1, s.r, s.p0)
       : curve(s.r, s.p1, t.r, t.p0)
-      + arrow(pMid,p1)
+      + arrow(t.pMid,t.p1)
       + curve(t.r, t.p1, s.r, s.p0))
       + "Z";
   }
