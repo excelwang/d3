@@ -21,8 +21,7 @@ d3.svg.chord = function() {
       + arc(s.r, s.p1, s.a1 - s.a0) + (equals(s, t)
       ? curve(s.r, s.p1, s.r, s.p0)
       : curve(s.r, s.p1, t.r, t.p0)
-      + "L"+t.pMid[0]+","+t.pMid[1]
-      + "L"+t.p1[0]+","+t.p1[1]
+      + arrow(pMid,p1)
       + curve(t.r, t.p1, s.r, s.p0))
       + "Z";
   }
@@ -57,6 +56,10 @@ d3.svg.chord = function() {
 
   function curve(r0, p0, r1, p1) {
     return "Q 0,0 " + p1;
+  }
+
+  function arrow(pMid,p1) {
+    return "L"+pMid+"L"+p1;
   }
 
   chord.radius = function(v) {
